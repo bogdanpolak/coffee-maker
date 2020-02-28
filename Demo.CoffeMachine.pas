@@ -42,22 +42,52 @@ begin
 end;
 
 class procedure TDemoCoffeeMachine.S02_Veryfication;
-{var
-  mockBrewingUnit: TMock<IBrewingUnit>;
-  mockGrinder: TMock<IGrinder>;
-  mockUserPanel: TMock<IUserPanel>;
-  mockMachineTester: TMock<IMachineTester>; }
+var
+  aBrewingUnit: TMock<IBrewingUnit>;
+  aGrinder: TMock<IGrinder>;
+  aUserPanel: TMock<IUserPanel>;
+  aMachineTester: TMock<IMachineTester>;
+  aCoffee: TCoffee;
 begin
-  {mockBrewingUnit := TMock<IBrewingUnit>.Create;
-  mockGrinder := TMock<IGrinder>.Create;
-  mockUserPanel := TMock<IUserPanel>.Create;
-  mockMachineTester := TMock<IMachineTester>.Create;
-  mockMachineTester.Setup.WillReturn(True).When.IsReadyToBrewCoffee;}
+  aBrewingUnit := TMock<IBrewingUnit>.Create;
+  aGrinder := TMock<IGrinder>.Create;
+  aUserPanel := TMock<IUserPanel>.Create;
+  aMachineTester := TMock<IMachineTester>.Create;
+
+  aMachineTester.Setup.WillReturn(True).When.IsReadyToBrewCoffee;
+
+  aMachineTester.Setup.Expect.Once.When.IsReadyToBrewCoffee;
+  aGrinder.Setup.Expect.Once.When.SetGrindSize(gsFine);
+  aGrinder.Setup.Expect.Once.When.GrindCoffeeBeans(8.0 {mg coffee});
+  aBrewingUnit.Setup.Expect.Once.When.PressCoffe;
+  aBrewingUnit.Setup.Expect.Once.When.BrewWater(30.0 {ml water});
+  aBrewingUnit.Setup.Expect.Once.When.PressWater(9.0 {bar});
+  aBrewingUnit.Setup.Expect.Once.When.TrashCoffe;
+  aUserPanel.Setup.Expect.Exactly(1).When.CoffeeInProgress(True);
+  aUserPanel.Setup.Expect.Exactly(1).When.CoffeeInProgress(False);
+
+  fCoffeeMachine := TCoffeeMachine.Create(
+    {} aBrewingUnit,
+    {} aGrinder,
+    {} aUserPanel,
+    {} aMachineTester);
+
+  aCoffee := fCoffeeMachine.BrewCoffee(csEspresso);
+
+  writeln(aCoffee.ToString);
+
+  aMachineTester.Verify;
+  aGrinder.Verify;
+  aBrewingUnit.Verify;
+  aUserPanel.Verify;
+
+  fCoffeeMachine.Free;
+
 end;
 
 procedure ExecuteDemoCoffeeMachine;
 begin
-  TDemoCoffeeMachine.S01_BasicSample;
+  TDemoCoffeeMachine.S02_Veryfication;
   writeln('Done ... hit Enter to finish ...');
 end;
 
