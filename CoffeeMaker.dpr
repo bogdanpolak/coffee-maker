@@ -1,6 +1,8 @@
 program CoffeeMaker;
 
+{$IFNDEF TESTINSIGHT}
 {$APPTYPE CONSOLE}
+{$ENDIF}
 
 {$R *.res}
 
@@ -25,9 +27,13 @@ uses
   Delphi.Mocks.WeakReference in 'delphi-mocks\Delphi.Mocks.WeakReference.pas',
   Delphi.Mocks.When in 'delphi-mocks\Delphi.Mocks.When.pas',
   Model.CoffeMachine in 'Model.CoffeMachine.pas',
-  Demo.CoffeMachine in 'Demo.CoffeMachine.pas';
+  Demo.CoffeMachine in 'Demo.CoffeMachine.pas',
+  Engine.TestRunner in 'Engine.TestRunner.pas';
 
 begin
+  ExecuteTestRunner;
+
+  {
   try
     ExecuteDemoCoffeeMachine;
   except
@@ -35,4 +41,5 @@ begin
       Writeln(E.ClassName, ': ', E.Message);
   end;
   readln;
+  }
 end.
