@@ -19,10 +19,10 @@ type
     // -----
     fCoffeeMachine: TCoffeeMachine;
     // -----
-    fBrewingUnit: TStub<IBrewingUnit>;
-    fGrinder: TStub<IGrinder>;
-    fUserPanel: TStub<IUserPanel>;
-    fMachineTester: TStub<IMachineTester>;
+    fBrewingUnit: TMock<IBrewingUnit>;
+    fGrinder: TMock<IGrinder>;
+    fUserPanel: TMock<IUserPanel>;
+    fMachineTester: TMock<IMachineTester>;
   public
     [SetUp]
     procedure SetUp;
@@ -43,10 +43,10 @@ implementation
 
 procedure TestCoffeeMaker.SetUp;
 begin
-  fBrewingUnit := TStub<IBrewingUnit>.Create;
-  fGrinder := TStub<IGrinder>.Create;
-  fUserPanel := TStub<IUserPanel>.Create;
-  fMachineTester := TStub<IMachineTester>.Create;
+  fBrewingUnit := TMock<IBrewingUnit>.Create;
+  fGrinder := TMock<IGrinder>.Create;
+  fUserPanel := TMock<IUserPanel>.Create;
+  fMachineTester := TMock<IMachineTester>.Create;
   // ----
   fCoffeeMachine := TCoffeeMachine.Create(
     {} fBrewingUnit,
@@ -64,6 +64,7 @@ procedure TestCoffeeMaker.NotReadyToBrewCoffee;
 var
   aCoffee: TCoffee;
 begin
+  fMachineTester.SetUp.WillReturn(False).When.IsReadyToBrewCoffee;
   aCoffee := fCoffeeMachine.BrewCoffee(csEspresso);
   Assert.AreEqual('-- no coffee --', aCoffee.ToString);
 end;
