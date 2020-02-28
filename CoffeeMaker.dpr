@@ -28,6 +28,7 @@ uses
   Delphi.Mocks.When in 'delphi-mocks\Delphi.Mocks.When.pas',
   Model.CoffeMachine in 'Model.CoffeMachine.pas',
   Demo.CoffeMachine in 'Demo.CoffeMachine.pas',
+  Test.CoffeeMachine in 'Test.CoffeeMachine.pas',
   Engine.TestRunner in 'Engine.TestRunner.pas';
 
 begin
